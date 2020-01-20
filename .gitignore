@@ -1,3 +1,6 @@
+### config ###
+src/config/
+
 HELP.md
 .gradle
 build/
