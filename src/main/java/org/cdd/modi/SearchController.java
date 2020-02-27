@@ -1,5 +1,6 @@
 package org.cdd.modi;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 @RestController
+@CrossOrigin(origins="*")
 public class SearchController {
     private static String url = "http://www.omdbapi.com/?apikey=";
     private static String apiKey = null;
@@ -36,14 +38,15 @@ public class SearchController {
 
         httpClient.setRequestMethod("GET");
 
-        StringBuilder response = new StringBuilder();
+        StringBuffer response = new StringBuffer();
 
         try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(httpClient.getInputStream()))) {
+                new InputStreamReader(httpClient.getInputStream(), "UTF-8"))) {
 
             String line;
             while ((line = in.readLine()) != null) {
                 response.append(line);
+                System.out.println(line);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,6 +65,6 @@ public class SearchController {
             requestUrlBuilder.append("=");
             requestUrlBuilder.append(paramMap.get(key).toString());
         }
-        return request(requestUrlBuilder.toString());
+        return request(requestUrlBuilder.toString().replaceAll(" ", "%20"));
     }
 }
